@@ -1,0 +1,293 @@
+﻿<Window x:Class="LogistikVerwaltung.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogistikVerwaltung"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+
+        <SolidColorBrush x:Key="ButtonColor" Color="#67c3e1"/>
+        <SolidColorBrush x:Key="ButtonTextColor" Color="White"/>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource ButtonColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource ButtonTextColor}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="6, 3"/>
+            <Setter Property="Margin" Value="5, 0, 5, 0"/>
+        </Style>
+
+
+
+
+    </Window.Resources>
+
+    <StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="Liefer Verwaltung" FontSize="24" FontWeight="Bold"/>
+        <TabControl Height="301" >
+            <TabItem Header="Lieferungen">
+                <DockPanel>
+                    <!-- Links -->
+                    <StackPanel DockPanel.Dock="Left" Margin="10 0 20 0" VerticalAlignment="Center">
+                        <TextBlock Text="Alle Lieferungen" FontSize="18"/>
+                        <!-- Datagrid -->
+                        <ListBox x:Name="LieferungenListBox" SelectionChanged="LieferungenListBox_SelectionChanged" Padding="10" Background="AliceBlue"  ItemsSource="{Binding LieferungenListe}" Height="150" Margin="0 5 0 5">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="ID: "/>
+                                        <TextBlock Text="{Binding Id}"/>
+                                        <TextBlock Text=", Produkt: " />
+                                        <TextBlock Text="{Binding Produkt}"/>
+                                        <TextBlock Text=", Menge: " />
+                                        <TextBlock Text="{Binding Menge}"/>
+                                        <TextBlock Text=", Datum: " />
+                                        <TextBlock Text="{Binding DateTime}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Neue Lieferung" x:Name="NeueLieferungBTN"/>
+                            <Button Content="Lieferung Bearbeiten" Background="Green" x:Name="LieferungBearbeitenBTN" Click="Bearbeiten_Click"/>
+                            <Button Content="Lieferung Löschen" Background="Red" x:Name="LieferungLöschen" Click="Löschen_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <!-- Rechts -->
+                    <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Right"  HorizontalAlignment="Right" Margin="20 0 20 0" Padding="20">
+                        <StackPanel >
+                            <TextBlock Text="Neue Lieferung"  FontSize="18"/>
+                            <Grid Margin="0 10 0 10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="0"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Produkt: "/>
+                                    <ComboBox x:Name="LieferungProdukteCB" Text="Beispiel" IsEditable="true" IsReadOnly="true"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Menge: "/>
+                                    <TextBox x:Name="LieferungMengeTB" Width="100"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="2"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Lieferant: "/>
+                                    <ComboBox x:Name="LieferungLieferantCB" Text="Beispiel" IsEditable="true" IsReadOnly="true"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="3"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Datum: "/>
+                                    <DatePicker x:Name="LieferungDatumDP"/>
+                                </StackPanel>
+                            </Grid>
+                            <Button x:Name="LieferungSpeichernBTN" Content="Speichern" Width="80" Click="OnSpeichernClick"/>
+                        </StackPanel>
+                    </Border>
+                    
+                </DockPanel>
+                
+            </TabItem>
+            
+            <TabItem Header="Produkte">
+                <DockPanel>
+                    <!-- Links -->
+                    <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center"  Margin="10 0 20 0">
+                        <TextBlock Text="Alle Produkte" FontSize="18"/>
+                        <ListBox x:Name="ProdukteListBox" SelectionChanged="ProdukteListBox_SelectionChanged" Padding="10" Background="AliceBlue"  ItemsSource="{Binding ProdukteListe}" Height="150" Margin="0 5 0 5">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="ID: "/>
+                                        <TextBlock Text="{Binding Id}"/>
+                                        <TextBlock Text=", Name: " />
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text=", Beschreibung: " />
+                                        <TextBlock Text="{Binding Beschreibung}"/>
+                                        <TextBlock Text=", Lagerort: " />
+                                        <TextBlock Text="{Binding Lagerort}"/>
+                                        <TextBlock Text=", Lieferant: " />
+                                        <TextBlock Text="{Binding Lieferant}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Neues Produkt" x:Name="NeuesProduktBTN"/>
+                            <Button Content="Produkt Bearbeiten" Background="Green" x:Name="ProduktBearbeitenBTN" Click="Bearbeiten_Click"/>
+                            <Button Content="Produkt Löschen" Background="Red" x:Name="ProduktLöschen" Click="Löschen_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <!-- Rechts -->
+                    <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Right"  HorizontalAlignment="Right" Margin="20 0 20 0" Padding="20">
+                        <StackPanel >
+                            <TextBlock Text="Neue Lieferung"  FontSize="18"/>
+                            <Grid Margin="0 10 0 10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="0"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Name: "/>
+                                    <TextBox x:Name="ProduktNameTB" Width="100"/>
+                                   
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Beschreibung: "/>
+                                    <TextBox x:Name="ProduktBeschreibungTB" Width="100"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="2"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Preis: "/>
+                                    <TextBox x:Name="ProduktPreisTB" Width="100"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="3"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Lagerort: "/>
+                                    <ComboBox x:Name="ProduktLagerortCB" Text="Berlin" IsEditable="true" IsReadOnly="true" Width="100"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="4"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Lieferant: "/>
+                                    <ComboBox x:Name="ProduktLieferantCB" Text="Amazon" IsEditable="true" IsReadOnly="true" Width="100"/>
+                                </StackPanel>
+                            </Grid>
+                            <Button x:Name="ProduktSpeichernBTN" Content="Speichern" Width="80" Click="OnSpeichernClick"/>
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Lieferanten">
+                <DockPanel>
+                    <!-- Links -->
+                    <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center"  Margin="10 0 20 0">
+                        <TextBlock Text="Alle Lieferanten" FontSize="18"/>
+                        <ListBox x:Name="LieferantenListBox" SelectionChanged="LieferantenListBox_SelectionChanged" Padding="10" Background="AliceBlue"  ItemsSource="{Binding LieferantenListe}" Height="150" Margin="0 5 0 5">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="ID: "/>
+                                        <TextBlock Text="{Binding Id}"/>
+                                        <TextBlock Text=", Name: " />
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text=", Kontakt: " />
+                                        <TextBlock Text="{Binding Kontakt}"/>
+                                        <TextBlock Text=", Adresse: " />
+                                        <TextBlock Text="{Binding Adresse}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Neuer Lieferant" x:Name="NeuerLieferantBTN"/>
+                            <Button Content="Lieferant Bearbeiten" Background="Green" x:Name="LieferantBearbeitenBTN" Click="Bearbeiten_Click"/>
+                            <Button Content="Lieferant Löschen" Background="Red" x:Name="LieferantLöschen" Click="Löschen_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Rechts -->
+                    <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Right"  HorizontalAlignment="Right" Margin="20 0 20 0" Padding="20">
+                        <StackPanel >
+                            <TextBlock Text="Neuer Lieferant"  FontSize="18"/>
+                            <Grid Margin="0 10 0 10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="0"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Name: "/>
+                                    <TextBox x:Name="LieferantNameTB" Width="100"/>
+
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Email: "/>
+                                    <TextBox x:Name="LieferantEmailTB" Width="100"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="2"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Ort: "/>
+                                    <TextBox x:Name="LieferantOrtTB" Width="100"/>
+                                </StackPanel>
+                            </Grid>
+                            <Button x:Name="LieferantSpeichernBTN" Content="Speichern" Width="80" Click="OnSpeichernClick"/>
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Lagerorte">
+                <DockPanel>
+                    <!-- Links -->
+                    <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center"  Margin="10 0 20 0">
+                        <TextBlock Text="Alle Lager" FontSize="18"/>
+
+                        <ListBox x:Name="LagerorteListBox" SelectionChanged="LagerorteListBox_SelectionChanged" Padding="10" Background="AliceBlue"  ItemsSource="{Binding LagerListe}" Height="150" Margin="0 5 0 5">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="ID: "/>
+                                        <TextBlock Text="{Binding Id}"/>
+                                        <TextBlock Text=", Name: " />
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text=", Adresse: " />
+                                        <TextBlock Text="{Binding Adresse}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Neues Lager" x:Name="NeuerLagerBTN"/>
+                            <Button Content="Lager Bearbeiten" Background="Green" x:Name="LagerBearbeitenBTN" Click="Bearbeiten_Click"/>
+                            <Button Content="Lager Löschen" Background="Red" x:Name="LagerLöschen" Click="Löschen_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Rechts -->
+                    <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Right"  HorizontalAlignment="Right" Margin="20 0 20 0" Padding="20">
+                        <StackPanel >
+                            <TextBlock Text="Neues Lager"  FontSize="18"/>
+                            <Grid Margin="0 10 0 10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="0"  VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Name: "/>
+                                    <TextBox x:Name="LagerNameTB" Width="100"/>
+
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 0 5">
+                                    <TextBlock Text="Adresse: "/>
+                                    <TextBox x:Name="LagerAdresseTB" Width="100"/>
+                                </StackPanel>
+                            </Grid>
+                            <Button x:Name="LagerSpeichernBTN" Content="Speichern" Width="80" Click="OnSpeichernClick"/>
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+
+
+
+    </StackPanel>
+</Window>
