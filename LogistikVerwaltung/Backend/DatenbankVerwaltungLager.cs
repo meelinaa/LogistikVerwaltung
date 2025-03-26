@@ -8,7 +8,7 @@ using LogistikVerwaltung;
 
 namespace LogistikVerwaltung.Backend
 {
-    internal class DatenbankVerwaltungLager
+    public class DatenbankVerwaltungLager
     {
         public static void NeuesLagerErstellen(string name, string adresse)
         {

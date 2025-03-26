@@ -50,7 +50,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Neue Lieferung" x:Name="NeueLieferungBTN"/>
+                            <Button Content="Alles Löschen" x:Name="AllesLöschenLieferungenBTN" Click="AllesLöschenBTN_Click"/>
                             <Button Content="Lieferung Bearbeiten" Background="Green" x:Name="LieferungBearbeitenBTN" Click="Bearbeiten_Click"/>
                             <Button Content="Lieferung Löschen" Background="Red" x:Name="LieferungLöschen" Click="Löschen_Click"/>
                         </StackPanel>
@@ -119,7 +119,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Neues Produkt" x:Name="NeuesProduktBTN"/>
+                            <Button Content="Alles Löschen" x:Name="AllesLöschenProdukteBTN" Click="AllesLöschenBTN_Click"/>
                             <Button Content="Produkt Bearbeiten" Background="Green" x:Name="ProduktBearbeitenBTN" Click="Bearbeiten_Click"/>
                             <Button Content="Produkt Löschen" Background="Red" x:Name="ProduktLöschen" Click="Löschen_Click"/>
                         </StackPanel>
@@ -192,7 +192,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Neuer Lieferant" x:Name="NeuerLieferantBTN"/>
+                            <Button Content="Alles Löschen" x:Name="AllesLöschenLieferantenBTN" Click="AllesLöschenBTN_Click"/>
                             <Button Content="Lieferant Bearbeiten" Background="Green" x:Name="LieferantBearbeitenBTN" Click="Bearbeiten_Click"/>
                             <Button Content="Lieferant Löschen" Background="Red" x:Name="LieferantLöschen" Click="Löschen_Click"/>
                         </StackPanel>
@@ -237,7 +237,7 @@
                     <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center"  Margin="10 0 20 0">
                         <TextBlock Text="Alle Lager" FontSize="18"/>
 
-                        <ListBox x:Name="LagerorteListBox" SelectionChanged="LagerorteListBox_SelectionChanged" Padding="10" Background="AliceBlue"  ItemsSource="{Binding LagerListe}" Height="150" Margin="0 5 0 5">
+                        <ListBox  x:Name="LagerorteListBox" SelectionChanged="LagerorteListBox_SelectionChanged" Padding="10" Background="AliceBlue"  ItemsSource="{Binding LagerListe}" Height="150" Margin="0 5 0 5" >
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -253,7 +253,7 @@
                         </ListBox>
 
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Neues Lager" x:Name="NeuerLagerBTN"/>
+                            <Button Content="Alles Löschen" x:Name="AllesLöschenLagerBTN" Click="AllesLöschenBTN_Click"/>
                             <Button Content="Lager Bearbeiten" Background="Green" x:Name="LagerBearbeitenBTN" Click="Bearbeiten_Click"/>
                             <Button Content="Lager Löschen" Background="Red" x:Name="LagerLöschen" Click="Löschen_Click"/>
                         </StackPanel>

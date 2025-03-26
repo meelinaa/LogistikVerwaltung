@@ -9,6 +9,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LogistikVerwaltung.Frontend;
+using LogistikVerwaltung.Backend;
+using System.Collections.ObjectModel;
+using System.Reflection;
+
 
 namespace LogistikVerwaltung
 {
@@ -19,8 +23,48 @@ namespace LogistikVerwaltung
     {
         public MainWindow()
         {
+
+            Datenbank.InitialisiereTabellen();
+            AlleListBoxenAktivieren();
             this.DataContext = this;
             InitializeComponent();
+        }
+
+
+        // Observable Collections für die Listboxen Lager
+        private ObservableCollection<Lager> lagerListe = new ObservableCollection<Lager>();
+
+        public ObservableCollection<Lager> LagerListe
+        {
+            get { return lagerListe; }
+            set { lagerListe = value; }
+        }
+
+        // Observable Collections für die Listboxen Lieferanten
+        private ObservableCollection<Lieferant> lieferantenListe = new ObservableCollection<Lieferant>();
+
+        public ObservableCollection<Lieferant> LieferantenListe
+        {
+            get { return lieferantenListe; }
+            set { lieferantenListe = value; }
+        }
+
+        // Observable Collections für die Listboxen Produkte
+        private ObservableCollection<Produkt> produkteListe = new ObservableCollection<Produkt>();
+
+        public ObservableCollection<Produkt> ProdukteListe
+        {
+            get { return produkteListe; }
+            set { produkteListe = value; }
+        }
+
+        // Observable Collections für die Listboxen Produkte
+        private ObservableCollection<Lieferung> lieferungenListe = new ObservableCollection<Lieferung>();
+
+        public ObservableCollection<Lieferung> LieferungenListe
+        {
+            get { return lieferungenListe; }
+            set { lieferungenListe = value; }
         }
 
         // Speichern der eingegebenen Daten
@@ -33,6 +77,9 @@ namespace LogistikVerwaltung
                     case "LagerSpeichernBTN":
                         LagerLogikFE lagerLogikFE = new();
                         lagerLogikFE.LagerSpeichern(this.LagerNameTB, this.LagerAdresseTB);
+                        this.LagerNameTB.Text = "";
+                        this.LagerAdresseTB.Text = "";
+                        LagerorteListBox_SelectionChanged(sender , null);
                         break;
                     case "LieferantSpeichernBTN":
                         LieferantenLogikFE lieferantenLogikFE = new();
@@ -70,6 +117,34 @@ namespace LogistikVerwaltung
                         produkteLogikFE.ProduktLöschen(this.ProdukteListBox);
                         break;
                     case "LieferungLöschen":
+                        LieferLogikFE lieferLogikFE = new();
+                        lieferLogikFE.LieferungLöschen(this.LieferungenListBox);
+                        break;
+                }
+            }
+        }
+
+        // Löschen aller Elemente in den jeweiligen Datenbanken/Listboxen
+        private void AllesLöschenBTN_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                switch (btn.Name)
+                {
+                    case "AllesLöschenLagerBTN":
+                        LagerLogikFE lagerLogikFE = new();
+                        lagerLogikFE.AllesLöschen();
+                        LagerorteListBox_SelectionChanged(sender, null);
+                        break;
+                    case "AllesLöschenLieferantenBTN":
+                        LieferantenLogikFE lieferantenLogikFE = new();
+                        lieferantenLogikFE.LieferantLöschen(this.LieferantenListBox);
+                        break;
+                    case "AllesLöschenProdukteBTN":
+                        ProdukteLogikFE produkteLogikFE = new();
+                        produkteLogikFE.ProduktLöschen(this.ProdukteListBox);
+                        break;
+                    case "AllesLöschenLieferungenBTN":
                         LieferLogikFE lieferLogikFE = new();
                         lieferLogikFE.LieferungLöschen(this.LieferungenListBox);
                         break;
@@ -117,7 +192,6 @@ namespace LogistikVerwaltung
             this.ProduktPreisTB.Text = produkt.Preis.ToString();
             this.ProduktLagerortCB.Text = produkt.Lagerort.Name;
             this.ProduktLieferantCB.Text = produkt.Lieferant.Name;
-
         }
 
         private void LieferantBearbeiten()
@@ -135,30 +209,57 @@ namespace LogistikVerwaltung
             this.LagerAdresseTB.Text = lager.Adresse;
         }
 
-        private void LagerorteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        // Alle Listboxen werden aktiviert
+        private void AlleListBoxenAktivieren()
+        {
+            LagerorteListBox_SelectionChanged(null, null);
+            LieferantenListBox_SelectionChanged(null, null);
+            ProdukteListBox_SelectionChanged(null, null);
+            LieferungenListBox_SelectionChanged(null, null);
+        }
+
+        // Synkronisierung der Listboxen mit den Datenbanken
+        private void LagerorteListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
+        {
+            LagerListe.Clear();
+           
+
+            var connection = Datenbank.GetConnection();
+
+            var lagerListeCmd = connection.CreateCommand();
+            lagerListeCmd.CommandText = "SELECT * FROM lager";
+
+            var reader = lagerListeCmd.ExecuteReader();
+            
+            while (reader.Read())
+            {
+                Lager lager = new(reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
+                LagerListe.Add(lager);
+            }
+            
+        }
+
+        private void LieferantenListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
 
         }
 
-        private void LieferantenListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ProdukteDataGrid_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
 
         }
 
-        private void ProdukteDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ProdukteListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
 
         }
 
-        private void ProdukteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LieferungenListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
 
         }
 
-        private void LieferungenListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+        
     }
 
     // Objekte für observable collections
